@@ -21,7 +21,7 @@
 bl_info = {
     "name": "Apex Rig AI",
     "author": "Tony (fork of Auto-Rig Pro by Artell)",
-    "version": (3, 77, 33),
+    "version": (3, 78, 0),
     "blender": (4, 2, 0),
     "location": "3D View > Properties> Apex Rig AI",
     "description": "Automatic rig generation based on reference bones and various tools",
@@ -39,6 +39,7 @@ from .src import auto_rig
 from .src import auto_rig_smart
 from .src import auto_rig_remap
 from .src import auto_rig_ge
+from .src import ultimate_weights
 if bpy.app.version >= (4,1,0):
     from .src.export_fbx import arp_fbx_init
 else:
@@ -197,7 +198,8 @@ def cleanse_modules():
 def register():
     auto_rig_prefs.register()
     auto_rig.register()
-    auto_rig_smart.register()   
+    ultimate_weights.register()
+    auto_rig_smart.register()
     auto_rig_remap.register()
     auto_rig_ge.register()
     rig_functions.register()
@@ -212,6 +214,7 @@ def unregister():
     auto_rig_remap.unregister()
     auto_rig_ge.unregister()
     rig_functions.unregister()
+    ultimate_weights.unregister()
     arp_fbx_init.unregister()
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)        
     cleanse_modules()

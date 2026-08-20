@@ -5339,7 +5339,7 @@ class ARP_OT_bind_to_rig(Operator):
         for obj in bpy.context.selected_objects:            
             if obj.type == 'MESH':
                 # Too many parts warning
-                if scn.arp_bind_engine == 'HEAT_MAP' and scn.arp_bind_split:
+                if scn.arp_bind_engine in ('HEAT_MAP', 'ULTIMATE') and scn.arp_bind_split:
                     self.tot_mesh_elements += count_closed_mesh_elements(obj)
             
                 # high poly warning
@@ -9809,7 +9809,7 @@ def _add_limb(self, type):
             limbs_path += '/'
         filepath = limbs_path + type.replace("_customlimb", "") + ".py"
         
-        file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')        
+        file = _open_text(filepath)        
         file_lines = file.readlines()
         bones_data_edit_raw = str(file_lines[0])
         bones_data_pose_raw = str(file_lines[1])
@@ -10197,10 +10197,24 @@ def _set_character_name(self):
                     c.data.body = self.name
         
 
+def _open_text(filepath):
+    """Return a text stream for UTF-8 or legacy Windows-encoded ARP data."""
+    import io
+
+    with open(filepath, 'rb') as handle:
+        raw = handle.read()
+    for encoding in ('utf-8', 'cp1252', 'latin-1'):
+        try:
+            return io.StringIO(raw.decode(encoding))
+        except UnicodeDecodeError:
+            continue
+    return io.StringIO(raw.decode('utf-8', errors='replace'))
+
+
 def _import_picker(filepath, self, context):
     scn = bpy.context.scene
     print('Import picker from file:', filepath)
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')
+    file = _open_text(filepath)
     file_lines = file.readlines()
     dict_string = str(file_lines[0])
     file.close()
@@ -10389,7 +10403,7 @@ def _add_picker(self, context, filepath, with_background, with_bones):
     picker_generated = False
     rig = bpy.context.active_object
     
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')  
+    file = _open_text(filepath)  
     print("Importing from file:", filepath)
     file_lines = file.readlines()
     dict_bones_string = str(file_lines[0])
@@ -11322,7 +11336,7 @@ def _set_picker_spine():
     rig = get_object(bpy.context.active_object.name)
     file_dir = os.path.dirname(os.path.abspath(__file__))    
     filepath = file_dir + '/picker.py'
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')  
+    file = _open_text(filepath)  
     file_lines = file.readlines()
     dict_bones_string = str(file_lines[0])
     file.close()
@@ -12399,7 +12413,7 @@ def _set_transform_constraints():
     # get the constraints transform values from file
     addon_directory = os.path.dirname(os.path.abspath(__file__))
     filepath = addon_directory + "/auto_rig_datas_export.py"
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')
+    file = _open_text(filepath)
  
     file_lines = file.readlines()
     dict_string = str(file_lines[0])
@@ -13650,7 +13664,7 @@ def _apply_shape():
 
 def _import_colors(filepath):
     scene = bpy.context.scene
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')
+    file = _open_text(filepath)
     file_lines = file.readlines()
     dict_string = str(file_lines[0])
     file.close()
@@ -13771,7 +13785,7 @@ def _import_rig_data(self):
     selection_only = self.selection_only   
     import_custom_shapes = self.import_custom_shapes  
     
-    file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')
+    file = _open_text(filepath)
     file_lines = file.readlines()
 
     # Import data
@@ -16638,7 +16652,7 @@ def _update_armature(self, context, required=False):
             # update the picker "reset all" script
             addon_directory = os.path.dirname(os.path.abspath(__file__))
             filepath = addon_directory + "/reset_all_controllers.py"
-            update_file = open(filepath, 'r') if sys.version_info >= (3, 11) else open(filepath, 'rU')
+            update_file = _open_text(filepath)
             file_lines = [i for i in update_file.readlines()]
             update_file.close()
 
@@ -20518,7 +20532,7 @@ def _bind_to_rig(self, context):
 
     
     # Particle system on the mesh? If so operate on a duplicate to preserve particles vertex groups, and transfer weights back at the end
-    if scn.arp_bind_engine == 'HEAT_MAP':
+    if scn.arp_bind_engine in ('HEAT_MAP', 'ULTIMATE'):
         for obj_name in self.obj_to_skin.copy():
             obj = get_object(obj_name)
             if len(obj.modifiers):
@@ -20543,7 +20557,7 @@ def _bind_to_rig(self, context):
                         break
 
     # High resolution meshes? If so reduce the polycount, and transfer weights back at the end
-    if scn.arp_optimize_highres and scn.arp_bind_engine == 'HEAT_MAP':
+    if scn.arp_optimize_highres and scn.arp_bind_engine in ('HEAT_MAP', 'ULTIMATE'):
         for obj_name in self.obj_to_skin.copy():
             obj = get_object(obj_name)
 
@@ -20797,7 +20811,7 @@ def _bind_to_rig(self, context):
                        
         
         # split loose parts in option for better auto-skinning
-        if scn.arp_bind_split and scn.arp_bind_engine == 'HEAT_MAP':
+        if scn.arp_bind_split and scn.arp_bind_engine in ('HEAT_MAP', 'ULTIMATE'):
             # duplicate to preserve vertex ID when splitting
             if not is_object_id(obj, '_arp_temp_skin', suffix_only=True):
                 bpy.ops.object.mode_set(mode='OBJECT')
@@ -21202,6 +21216,17 @@ def _bind_to_rig(self, context):
     
     print("Bound in " + str(round(time.time() - time_start, 2)) + " seconds.")
     self.binding_time = time.time() - time_start
+
+    # ULTIMATE engine: run the post-process + diagnostics pass over the
+    # freshly-bound meshes (normalize, cap influences, prune, optional smooth)
+    if scn.arp_bind_engine == 'ULTIMATE':
+        try:
+            from . import ultimate_weights
+            self.ultimate_diag = ultimate_weights.post_process_weights(
+                [n for n in self.obj_to_skin], self.rig, scn, self.report)
+        except Exception as err:
+            print("[ULTIMATE] post-process failed:", err)
+            self.report({'WARNING'}, "Ultimate post-process failed: " + str(err))
 
 
 def _unbind_to_rig(full_unbind=False):
@@ -48949,6 +48974,35 @@ class ARP_PT_binding_settings(Panel, ArpRigPanel):
             col.enabled = scn.arp_optimize_highres
             col.prop(scn, "arp_highres_threshold", text="Polycount Threshold")
 
+        elif scn.arp_bind_engine == "ULTIMATE":
+            col = layout.column()
+            col.separator()
+            col.prop(scn, "arp_bind_split", text="Split Parts")
+            col.prop(scn, "arp_optimize_highres", text="Optimize High Res")
+            sub = col.column(align=True)
+            sub.enabled = scn.arp_optimize_highres
+            sub.prop(scn, "arp_highres_threshold", text="Polycount Threshold")
+
+            box = layout.box()
+            pcol = box.column(align=True)
+            pcol.label(text="Post-Process", icon='MOD_VERTEX_WEIGHT')
+            pcol.prop(scn, "arp_ult_normalize")
+            pcol.prop(scn, "arp_ult_max_influences")
+            pcol.prop(scn, "arp_ult_prune_threshold")
+            pcol.prop(scn, "arp_ult_smooth")
+            srow = pcol.column(align=True)
+            srow.enabled = scn.arp_ult_smooth
+            srow.prop(scn, "arp_ult_smooth_factor")
+            srow.prop(scn, "arp_ult_smooth_iters")
+            box.operator("arp.ultimate_report", text="Show Last Report", icon='INFO')
+
+            box.separator()
+            pcol2 = box.column(align=True)
+            pcol2.label(text="Ultimate Weights Tools", icon='TOOL_SETTINGS')
+            pcol2.operator("arp.ultimate_symmetrize", text="Symmetrize Weights", icon='MOD_MIRROR')
+            pcol2.operator("arp.ultimate_fix_unweighted", text="Auto Fix Unweighted", icon='UV_SYNC_SELECT')
+            pcol2.operator("arp.ultimate_heatmap_toggle", text="Toggle Heatmap Overlay", icon='RESTRICT_SELECT_OFF')
+
         elif scn.arp_bind_engine == "PSEUDO_VOXELS":
             col = layout.column(align=True)
             col.separator()
@@ -49549,6 +49603,7 @@ def register():
     bpy.types.Scene.arp_bind_engine = EnumProperty(items=(
         ('HEAT_MAP', 'Heat Maps', 'Surface skinning.\nAccurate but may be inconsistent with multiple layers of clothes, props'), 
         ('PSEUDO_VOXELS', 'Voxelized', 'Approximated volume skinning. \nMore consistent than Heat Maps, but less accurate with small details (fingers, facial...)'), 
+        ('ULTIMATE', 'Ultimate (Heat + Post-Process)', 'Heat Map skinning followed by a post-process pass:\nnormalize, cap influences, prune tiny weights, optional smoothing, plus a diagnostics report'),
         ('VHDS', 'Voxel Heat Diffuse Skinning (addon)', 'True volume skinning.\nRequires the Voxel Heat Diffuse Skinning addon installed')), 
         description="Binding method", name="Bind Engine", options={'HIDDEN'})
     bpy.types.Scene.arp_bind_improve_twists = BoolProperty(default=True, name="Smooth Twist Weights", description="Refine twist weights by applying a gradient decay along the bone", options={'HIDDEN'})
