@@ -50,8 +50,14 @@ def is_reset_bone(bone_name):
 def reset_all_controllers():
     # the function is run at startup, in case of error, exit
     try:
-        bpy.context.active_object
-    except:
+        active = bpy.context.active_object
+    except Exception:
+        return
+    # the upstream guard only caught a restricted context; a None or
+    # non-armature active object crashed get_armature_collections below
+    # (AttributeError: 'Mesh' object has no attribute 'collections_all'),
+    # killing the whole add-on's register() when imported with a mesh active
+    if active is None or getattr(active, "type", None) != 'ARMATURE':
         return
 
     # display all collections
@@ -128,7 +134,10 @@ def reset_all_controllers():
 
     bpy.ops.pose.select_all(action='DESELECT')
     
-# necessary, since the picker execute scripts instead of calling functions 
+# necessary, since the picker execute scripts instead of calling functions.
+# The call also fires at IMPORT time (rig_functions imports this module during
+# register()); the strengthened guard above makes that harmless for any
+# non-armature active object instead of killing the add-on's registration.
 reset_all_controllers()
 
 
