@@ -11,6 +11,15 @@ fork modifications copyright 2026 Tony. See [LICENSE.txt](LICENSE.txt).
 
 ## What differs from upstream
 
+- **ULTIMATE bind engine** — Heat Map skinning followed by a post-process
+  pass (normalize, cap influences, prune tiny weights, optional smoothing)
+  with a diagnostics report and weight tools (symmetrize, fix unweighted,
+  heatmap overlay).
+- **Smart Go/Detect crash fix** — detection no longer crashes when the
+  generated rig replaces the active object; viewport framing is guarded.
+- **Legacy-encoding preset loading** — limb/picker/rig-data files saved with
+  Windows encodings (cp1252/latin-1) load instead of raising
+  UnicodeDecodeError.
 - Rebranded UI (panels, labels, exporter entries) as **Apex Rig AI**.
 - Update checks and doc/tracker links point at this repository, not Lucky3D.
 - Extension-safe preferences lookup (fixes a `KeyError` in the preset-path

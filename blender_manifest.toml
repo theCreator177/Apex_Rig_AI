@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 id = "apex_rig_ai"
-version = "3.77.33"
+version = "3.78.0"
 name = "Apex Rig AI"
 tagline = "Automatic rig generation based on reference bones and various tools"
 maintainer = "Tony <tony65430@gmail.com>"
@@ -20,6 +20,14 @@ license = [
 copyright = [
   "2016-2024 Lucas Veber",
   "2026 Tony (fork modifications)",
+]
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "/.git/",
+  "/.gitignore",
+  "*.pyc",
 ]
 
 [permissions]

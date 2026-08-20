@@ -1,3 +1,15 @@
+[3.78.0]
+
+New/improved:
+-- Apex Rig AI fork release: rebranded identity, update checks and doc links point at this repository
+-- ULTIMATE bind engine: Heat Map skinning followed by a post-process pass (normalize, cap influences, prune, optional smoothing) with a diagnostics report
+-- Robust preset text loading: UTF-8 with cp1252/latin-1 fallback for legacy Windows-encoded limb/picker/rig-data files
+
+Fixed:
+-- Smart Go/Detect crash when detection replaces the active object (unhide/reselect guard + safe viewport framing)
+-- KeyError in the preset-path dialogs under Blender 4.2+ extension installs
+-- Version lookup now derives the add-on's own package, works from any extension repository
+
 [3.77.33]
 
 New/improved:
