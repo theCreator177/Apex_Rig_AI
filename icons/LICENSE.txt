@@ -1,0 +1,7 @@
+The icon image files in this folder are original artwork created for the
+Apex Rig AI fork (2026) and are released under the CC0 1.0 Universal license
+(public domain dedication): https://creativecommons.org/publicdomain/zero/1.0/
+
+They are NOT the icons distributed with Auto-Rig Pro. The original Auto-Rig
+Pro icons are Royalty Free licensed and cannot be redistributed; they were
+replaced with these originals for this reason.

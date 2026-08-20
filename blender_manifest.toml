@@ -1,0 +1,28 @@
+schema_version = "1.0.0"
+id = "apex_rig_ai"
+version = "3.77.33"
+name = "Apex Rig AI"
+tagline = "Automatic rig generation based on reference bones and various tools"
+maintainer = "Tony <tony65430@gmail.com>"
+type = "add-on"
+website = "https://github.com/theCreator177/Apex_Rig_AI"
+tags = ["Rigging", "Animation"]
+
+blender_version_min = "2.8.0"
+
+# Apex Rig AI is an independent GPL fork of Auto-Rig Pro 3.77.33 by Artell
+# (Lucas Veber). Source code: GPL-2.0-or-later, original copyright preserved.
+# The original Royalty Free assets (icons, limb/misc preset .blends) are NOT
+# distributed with this fork; icons were replaced with original CC0 artwork.
+license = [
+  "SPDX:GPL-2.0-or-later", "CC0",
+]
+copyright = [
+  "2016-2024 Lucas Veber",
+  "2026 Tony (fork modifications)",
+]
+
+[permissions]
+network = "To look for updates."
+files = "To save and write rig preset files on disk, export FBX, GLTF files"
+clipboard = "Copy and paste bone transforms"

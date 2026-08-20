@@ -1,0 +1,52 @@
+[3.77.33]
+
+New/improved:
+Rig: New "Smart IK Pole" as leg option, to better maintain the IK pole position while rotating the foot, avoiding leg flips
+Rig: Implemented the IK tip fingers feature back, in a propery way that doesn't break the dependency graph (since it broke with Blender 4 graph)
+Rig: Horse, dog presets: Enabled the muzzle controller by default, and decreased the jaw speed rotation
+Rig: Mouth: When using rotation to open the jaw, now align the jaw controller exactly where the reference bone is located. Can be reverted in the "Legacy" menu.
+Rig: Spline IK limbs don't require anymore to manually unlink the action before "Match to Rig"
+Rig Tools: Support for the new Smart IK pole in the "Pole Parent" settings
+Rig Tools: UI: Wrapped the Foot Roll Break settings under a "Show Advanced" toggle for simpler UI
+Rig Tools: Support for Smart IK pole when snapping and baking the pole parent
+Smart: AI: New "Samples" setting for facial prediction, more samples generally lead to better estimation
+Smart: AI: AI files updated to version 1.19, improving support for arms bent forward and facial estimation
+Smart: AI: AI files updated to version 1.20, support for multiple samples for all models
+Smart: The Hand Tip marker is now skipped for quicker manual setup when "Use Markers Depth" is disabled, since it is not required
+Smart: Fingers markers lines connections are now drawn too
+Smart: Support for eyeballs as hemisphere
+Skin: Send a warning if Scale Fix is enabled, while meshes objects are keyframes, and remove keyframes automatically
+UI: Warning message when adding Bendy-Bones limbs, stating they're not exportable
+Misc: Refactored the duplicate object calls. Use the lower level data method instead of operator, avoiding breakages when changing Blender preferences duplicate settings
+Prefs: Preferences can now be imported and exported to file
+Prefs: When installing AI files, now only remove the "inference" folder tree and root files selectively to avoid accidental deletion of third-party files (in case the AI path is accidentally pointing at a wrong folder)
+Export: Support custom properties on humanoid skeletons, custom bones only
+Export: Support custom properties located on rig object
+Export: "Export Twist" no longer export twist bones when it's off and multiple twist bones are set
+
+Fixed:
+Smart: The elbow position was incorrect in case "Use Markers Depth" was disabled and the elbow markers was not set
+Smart: Use lower level empty creation code for "foot_dir_space", avoiding potential context-collection errors
+Smart: Error handling when trying to run the facial guess markers feature, while the head tip marker does not exist yet
+Export: Avoid broken fingers weights in case the user has created wrong vertex groups for the first phalange with c_ prefix
+Export: More resilient name identification of Quick Rig constraints
+Export: Extra spine limbs were not catching the correct parent
+Export: Humanoid: Skip bone creation if it's already added as a custom bone
+Export: Shape keys action slots where not skipped, breaking the export
+Export: Exporting the active shape key animation, without driven values, was no more supported in Blender 4.4 and higher (slot support)
+Export: Error when applying shape keys of objects containing NLA tracks with identical names
+Export: Custom bones parented to the first finger phalange were unparented when exporting
+Rig: The knee and elbow joint fans bulge constraints were not evaluating the angle correctly
+Rig: The base forearm bone must be parented to the arm, for correct evaluation of joint fans bulge. Requires an armature update.
+Rig: The Bird preset armature for Blender 4.4 was improperly displayed in the list as custom preset
+Rig: Blender 2.93 compatibility fix, use "BEFORE" instead of "BEFORE_FULL" when setting the muzzle constraints
+Rig: Fingers IK: Missing backward-compatibility checks when Match to Rig
+Rig: Missing lip name variable in the current scope when setting the lips amount, leading to an error in some cases
+Rig: Incorrect constraints order when enabling the lips offset controller and sticky lips
+Rig: Error when duplicating a Spline IK limb on a second armature
+Rig: Missing constraint removal when disabling Soft-Lips
+Rig Tools: Accidentally throwing an error when trying to snap all IK fingers, even when the rig was updated properly
+Prefs: "Parent Objects when Binding" was not saved
+Prefs: Syntax error when saving "parent_bound_objects"
+Remap: The IK pole in Target or Chain modes were not properly supporting the redefined rest pose in Preserved mode, leading to wrong position if the rest pose had important offsets
+Skin: Binding multiple objects in Voxelized mode was broken, accidentally caused by the duplicate function refactor

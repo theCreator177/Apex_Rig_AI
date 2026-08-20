@@ -1,0 +1,35 @@
+Apex Rig AI — licensing
+
+Apex Rig AI is an independent fork of Auto-Rig Pro 3.77.33 by Artell
+(Lucas Veber). It is not affiliated with or endorsed by Lucky3D / Artell.
+
+1. Source code
+   All add-on source code (src/ and subfolders, __init__.py) is released
+   under the GNU General Public License, version 2 or (at your option) any
+   later version, exactly as the original.
+   Copyright (C) 2016-2024 Lucas Veber (original Auto-Rig Pro code)
+   Copyright (C) 2026 Tony (fork modifications)
+
+2. Icons (icons/)
+   Original artwork created for this fork, released under CC0 1.0 Universal.
+   The Royalty Free icons shipped with Auto-Rig Pro are NOT included.
+
+3. Icons (icons_279/)
+   From the Blender 2.79 icon set, Creative Commons Attribution-ShareAlike
+   4.0 International (see icons_279/LICENSE.txt).
+
+4. Rig component assets (armature_presets/, *.blend)
+   Released under CC0, as in the original distribution.
+
+5. Remap presets (remap_presets/, *.bmap)
+   GNU General Public License, as in the original distribution.
+
+6. Not distributed
+   The Royalty Free asset files of Auto-Rig Pro (limb_presets/*.blend,
+   misc_presets/*.blend, and the original icons) cannot be freely
+   redistributed and are deliberately absent from this repository. Owners
+   of an Auto-Rig Pro license may copy them in locally; see the LICENSE.txt
+   in those folders.
+
+NOTE: as with the original, any rig generated with this add-on by the
+end-user is the sole property of that end-user, who has full rights on it.

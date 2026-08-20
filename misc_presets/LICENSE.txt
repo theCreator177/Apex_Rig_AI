@@ -1,0 +1,7 @@
+The misc preset .blend assets distributed with Auto-Rig Pro (facial_setup.blend,
+humanoid.blend) are Royalty Free licensed ("The asset files cannot be freely
+redistributed and sold") and are therefore NOT included in this repository.
+
+If you own an Auto-Rig Pro license, copy those files into this folder to enable
+the facial setup and humanoid preset features. Without them, features that
+append from this folder will not work.

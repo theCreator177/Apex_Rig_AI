@@ -1,0 +1,7 @@
+The limb preset .blend assets distributed with Auto-Rig Pro are Royalty Free
+licensed ("Files cannot be freely redistributed and sold") and are therefore
+NOT included in this repository.
+
+If you own an Auto-Rig Pro license, copy its limb_presets/modules.blend into
+this folder to enable the modular limb features. Without it, features that
+append limb modules from this folder will not work.
