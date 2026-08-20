@@ -660,17 +660,25 @@ class ARP_OT_go_detect(Operator):
             _delete_detected()
 
             # Display the ref bones layer only
+            # _delete_detected() removes the active object, so we must
+            # ensure the rig is unhidden and present in the view layer
+            # before setting it active and switching to EDIT mode.
+            rig_obj = get_object(self.overwritten_rig)
+            if rig_obj:
+                unhide_object(rig_obj)
+                rig_obj.hide_select = False
             set_active_object(self.overwritten_rig)
 
-            bpy.ops.object.mode_set(mode='EDIT')
+            if bpy.context.view_layer.objects.active is not None:
+                bpy.ops.object.mode_set(mode='EDIT')
 
-            if scn.arp_smart_sym:
-                bpy.context.active_object.data.use_mirror_x = True
+                if scn.arp_smart_sym:
+                    bpy.context.active_object.data.use_mirror_x = True
 
-            enable_layer_exclusive('Reference')           
+                enable_layer_exclusive('Reference')
 
-            # enable in-front display
-            bpy.context.active_object.show_in_front = True
+                # enable in-front display
+                bpy.context.active_object.show_in_front = True
 
             # display the Rig tab
             scn.arp_active_tab = "CREATE"
@@ -713,11 +721,25 @@ class ARP_OT_go_detect(Operator):
                 #   restore cursor position
                 scn.cursor.location = cursor_current_position   
 
-            # Fame the character decently
-            bpy.ops.armature.select_all(action='SELECT')
-            #bpy.ops.view3d.view_axis(type='FRONT')
-            bpy.ops.view3d.view_selected(use_all_regions=False)
-            bpy.ops.armature.select_all(action='DESELECT')
+            # Frame the character decently
+            # Guard: armature.select_all requires EDIT mode on an active
+            # armature.  If the try block failed early (e.g. mode_set at
+            # the original line 665), we may be in OBJECT mode with no
+            # active armature — re-establish context or skip gracefully.
+            try:
+                rig_obj_final = get_object(self.overwritten_rig)
+                if rig_obj_final and bpy.context.view_layer.objects.active != rig_obj_final:
+                    unhide_object(rig_obj_final)
+                    set_active_object(self.overwritten_rig)
+                if bpy.context.view_layer.objects.active is not None:
+                    if bpy.context.mode != 'EDIT_ARMATURE':
+                        bpy.ops.object.mode_set(mode='EDIT')
+                    bpy.ops.armature.select_all(action='SELECT')
+                    #bpy.ops.view3d.view_axis(type='FRONT')
+                    bpy.ops.view3d.view_selected(use_all_regions=False)
+                    bpy.ops.armature.select_all(action='DESELECT')
+            except RuntimeError as e:
+                print("  Warning: could not frame character after detection:", e)
             
             # restore undo
             context.preferences.edit.use_global_undo = use_global_undo
