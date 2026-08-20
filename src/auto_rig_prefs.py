@@ -452,8 +452,15 @@ def register():
         try: register_class(cl)        
         except: pass
         
-    # load exported prefs on addon startup
-    load_arp_prefs(get_saved_pref_path())   
+    # load exported prefs on addon startup.
+    # Guarded: with no preferences entry yet (e.g. addon_utils.enable with
+    # default_set=False) get_prefs() raises KeyError, and an exception here
+    # killed the whole registration. Saved prefs are a convenience, never
+    # worth losing the add-on over.
+    try:
+        load_arp_prefs(get_saved_pref_path())
+    except Exception as err:
+        print("[Apex Rig AI] could not load saved preferences:", err)
     
     bpy.types.Scene.arp_debug_mode = bpy.props.BoolProperty(name='Debug Mode', default=False, description = 'Run the addon in debug mode for debugging purposes.\nWarning, can generate earthquakes and solar tempest. Do not enable for normal usage!', options={'HIDDEN'})
     bpy.types.Scene.arp_debug_bind = bpy.props.BoolProperty(name='Debug Bind', default=False, description='Enable Debug mode for bind functions, for debugging purposes.\nWarning, will break tools and generate earthquakes!\nDo not enable for normal usage!', options={'HIDDEN'})
