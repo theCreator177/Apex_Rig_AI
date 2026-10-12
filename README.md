@@ -28,23 +28,11 @@ fork modifications copyright 2026 Tony. See [LICENSE.txt](LICENSE.txt).
   install path, so any extension repo location works.
 - Original CC0 icons (the upstream Royalty Free icons are not redistributable).
 
-## What is deliberately missing
-
-Auto-Rig Pro's Royalty Free assets — `limb_presets/modules.blend`,
-`misc_presets/facial_setup.blend`, `misc_presets/humanoid.blend`, and the
-original icon art — **cannot be freely redistributed** and are not in this
-repository. Features that append from those files require an Auto-Rig Pro
-license: buy it, then copy those files into the matching folders locally.
-Everything else works without them.
-
 ## Install
 
 1. Zip the repository contents (or download a release zip).
 2. Blender: **Edit > Preferences > Add-ons > Install from Disk**.
 3. Enable **Apex Rig AI**. The panel lives in **3D View > Sidebar**.
-
-⚠️ Do not enable Apex Rig AI and Auto-Rig Pro at the same time — they
-register the same operator/property names and will conflict. Enable one.
 
 ## License
 
